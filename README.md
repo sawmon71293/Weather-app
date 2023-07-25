@@ -1,6 +1,5 @@
 # weather-app
-
-This template should help get you started developing with Vue 3 in Vite.
+Weather tracking app using Vuejs
 
 ## Recommended IDE Setup
 
