@@ -70,11 +70,7 @@
     <div class="max-w-screen-md w-full py-12">
       <div class="mx-8 text-white">
         <h2 class="mb-4">7 Day Forecast</h2>
-        <div
-          v-for="day in data.daily"
-          :key="day.dt"
-          class="flex items-center"
-        >
+        <div v-for="day in data.daily" :key="day.dt" class="flex items-center">
           <p class="flex-1">
             {{
               new Date(day.dt * 1000).toLocaleDateString("en-us", {
@@ -113,15 +109,12 @@ const appid = _APPID;
 const getWeatherData = async () => {
   try {
     const weatherData = await axios.get(
-      `https://api.openweathermap.org/data/2.5/onecall?
-lat=${route.query.lat}&lon=${route.query.lng}&exclude={part}&
-appid=${appid}&units=imperial`
+      `https://api.openweathermap.org/data/3.0/onecall?lat=${route.query.lat}&lon=${route.query.lng}&appid=${appid}`
     );
-
+    console.log({ weatherData });
     const localOffset = new Date().getTimezoneOffset() * 60000;
-    const utc = weatherData.data.current.dt * 1000 + localOffset;
-    weatherData.data.currentTime =
-      utc + 1000 * weatherData.data.timezone_offset;
+    const utc = weatherData.data.dt * 1000 + localOffset;
+    weatherData.data.currentTime = utc + 1000 * weatherData.data.timezone;
 
     weatherData.data.hourly.forEach((hour) => {
       const utc = hour.dt * 1000 + localOffset;
@@ -130,8 +123,7 @@ appid=${appid}&units=imperial`
 
     //flicker delay
     await new Promise((res) => setTimeout(res, 1000));
-
-    return weatherData.data; // Return the fetched data
+    return weatherData.data;
   } catch (err) {
     console.log(err);
   }
